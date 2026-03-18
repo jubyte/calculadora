@@ -1,5 +1,5 @@
 const resultado = document.querySelector(".resultado");
-const botão = document.querySelectorAll(".botão button");
+const botão = document.querySelectorAll(".botao button");
 
 
 let currentNumber = "";
@@ -53,13 +53,16 @@ function calculate () {
             resultadoValor = firstOperand + secondOperand;
             break;
 
-
         case "-":
             resultadoValor = firstOperand - secondOperand;
             break;
        
+        case "×":
+            resultadoValor = firstOperand * secondOperand;
+            break;
+
         case "÷":
-            resultadoValor = firstOperand - secondOperand;
+            resultadoValor = firstOperand / secondOperand;
             break;
         default:
             return;
@@ -76,20 +79,56 @@ function calculate () {
     operator = null;
     firstOperand = null;
     restart = true;
-    porcentagemValor = null;
+    percentageValue = null;
     updateResultado();
 }
 
+function clearCalculadora() {
+    currentNumber = "";
+    firstOperand = null;
+    operator = null;
+    updateResultado(true);
+}
+
+function setPercentage() {
+    let resultado = parseFloat(currentNumber) / 100;
+
+    if (["+", "-"].includes(operator)) {
+        resultado = resultado * (firstOperand || 1);
+    }
+
+    if (resultado.toString().split(".")[1]?.length > 5) {
+        resultado = resultado.toFixed(5).toString();
+    }
+
+    currentNumber = resultado.toString();
+    updateResultado();
+}
 
 botão.forEach((button) => {
-    buttom.addEventListener("click", () => {
+    button.addEventListener("click", () => {
         const buttonText = button.innerText;
+
         if (/^[0-9,]+$/.test(buttonText)) {
             addDigit(buttonText);
+
         } else if (["+", "-", "×", "÷"].includes(buttonText)) {
-          setOperator (buttonText);
+            setOperator(buttonText);
+
         } else if (buttonText === "=") {
-          calculate();
+            calculate();
+
+        } else if (buttonText === "C") {
+            clearCalculadora();
+
+        } else if (buttonText === "±") {
+            currentNumber = (
+                parseFloat(currentNumber || firstOperand) * -1
+            ).toString();
+            updateResultado();
+
+        } else if (buttonText === "%") {
+            setPercentage();
         }
     });
 });
