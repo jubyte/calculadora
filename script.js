@@ -62,10 +62,18 @@ function calculate () {
             break;
 
         case "÷":
+            if (secondOperand === 0) {
+                currentNumber = "Erro";
+                updateResultado();
+                operator = null;
+                firstOperand = null;
+                restart = true;
+                return;
+            }
             resultadoValor = firstOperand / secondOperand;
             break;
-        default:
-            return;
+            default:
+        return;
     }
 
 
@@ -132,4 +140,3 @@ botão.forEach((button) => {
         }
     });
 });
-
